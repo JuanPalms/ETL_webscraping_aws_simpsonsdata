@@ -1,0 +1,22 @@
+name: itam
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - scikit-learn
+  - pandas
+  - numpy
+  - pytest
+  - ipython
+  - jupyter
+  - jupyterlab
+  - matplotlib
+  - seaborn
+  - plotly
+  - pylint
+  - autopep8
+  - joblib
+  - lxml
+  - boto3
+  - awswrangler

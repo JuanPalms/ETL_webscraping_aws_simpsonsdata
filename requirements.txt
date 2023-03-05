@@ -1,0 +1,5 @@
+pytest
+plotly
+pylint
+autopep8
+flake8
