@@ -1,8 +1,19 @@
-#ETL television programs
+# ETL television programs
 
 This repository implements an ETL process using the data of the programs broadcasted in all the seasons of the show "The Simpsons". 
 
 ## Repository structure
+.
+├── config.yaml
+├── data
+│   └── raw
+│       └── simpsons_episode_guests.csv
+├── environment.yml
+├── README.md
+├── requirements.txt
+└── src
+    ├── extract_transform.py
+    └── utility.py
 
 ## Data
 
