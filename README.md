@@ -3,7 +3,7 @@
 This repository implements an ETL process using the data of the programs broadcasted in all the seasons of the show "The Simpsons". 
 
 ## Repository structure
-.
+```bash
 ├── config.yaml
 ├── data
 │   └── raw
@@ -14,7 +14,7 @@ This repository implements an ETL process using the data of the programs broadca
 └── src
     ├── extract_transform.py
     └── utility.py
-
+```
 ## Data
 
 The list of "The Simpsons" episodes season (1-20)
