@@ -1,0 +1,7 @@
+#### INITIAL SETTINGS
+
+# 1) DIRECTORIES
+data_directory: ../data
+raw_data: /raw
+clean_data: /clean
+
