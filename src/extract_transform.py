@@ -56,19 +56,22 @@ tbl_guests_per_episode_raw = (
         .drop(columns='prod_code')
         # Extraer el numero de episodio
         .assign(
-            episode = lambda df_: df_['no'].str.extract(r'(\d{2})$'),
+            episode_dummy = lambda df_: df_['no'].str.extract(r'(\d{2})$'),
             episode_title = lambda df_: df_.episode_title.str.replace(r'([[0-9]*])', "", regex=True).str.replace('"', ''),
-            rol_himself_herself = lambda df_: (df_['roles'] == 'Himself') | (df_['roles'] == 'Herself'))
+            rol_himself_herself = lambda df_: (df_['roles'] == 'Himself') | (df_['roles'] == 'Herself'),
+            season=lambda df: pd.to_numeric(df['season'], errors='coerce'),
+            episode=lambda df: pd.to_numeric(df['episode_dummy'], errors='coerce'))
+        # Elimino la columna no
+        .drop(columns=['no','roles','episode_dummy'])
+        .dropna(subset=["season","episode"])
         #Change datatype columns for appropiate merge
         .assign(
             rol_himself_herself=lambda df_: df_['rol_himself_herself'].astype(int),
-            #episode=lambda df_: df_['episode'].astype(int),
-            #season=lambda df_: df_['season'].astype(int)
+            season=lambda df_: df_['season'].astype(int),
+            episode=lambda df_: df_['episode'].astype(int)
             )
-        # Elimino la columna no
-        .drop(columns=['no','roles'])
 )
-print(tbl_guests_per_episode_raw.head())
+
 # Guarda los datos en local
 tbl_guests_per_episode_raw.to_csv(os.path.join(config_f["data_directory"]+config_f["raw_data"],"simpsons_episode_guests.csv"),index=False)
 
@@ -78,8 +81,9 @@ tbl_guests_per_episode_raw.to_csv(os.path.join(config_f["data_directory"]+config
 
 DICT_CLEAN_NAMES_EPISODES_TABLE = {
     'No. overall': 'no_overall',
-    'No. in season': 'no',
-    'Title': 'title',
+    'No. in season': 'episode',
+    'Title': 'episode_title',
+    'Written by': 'written_by',
     'Directed by': 'directed_by',
     'Original air date': 'date_aired',
     'Prod. code': 'prod_code',
@@ -92,8 +96,21 @@ for tbl_index in np.arange(0,20, 1):
     tbls_raw_simpsons_episodes[tbl_index]['season']=tbl_index+1
     episodes_df = pd.concat([episodes_df,tbls_raw_simpsons_episodes[tbl_index]])
 
-#Modify index of resulting dataframe
-episodes_df.set_index('No. overall', inplace=True)
+# Aqui va el preprocesamiento
+episodes_totals_raw = (
+    episodes_df
+    # Arregla el nombre de las columnas
+    .rename(columns=DICT_CLEAN_NAMES_EPISODES_TABLE)
+    .assign(
+        # Estandariza el formato de la fecha y los datos faltantes
+        date_aired = lambda df_: pd.to_datetime(df_.date_aired),
+        # Convierte la variable household or viewers en numérica
+        household_or_viewers= lambda df_: df_.household_or_viewers.str.replace(r'(.[n[0-9]*])', "", regex=True).replace('TBA', np.nan),
+        episode_title = lambda df_: df_.episode_title.str.replace('"', '')
+    )
+    # Elimina la variable prod code
+    .drop(columns="prod_code")
+)
 
-print(episodes_df.tail())
-
+# Guarda los datos en local
+episodes_totals_raw.to_csv(os.path.join(config_f["data_directory"]+config_f["raw_data"],"simpsons_episodes_totals.csv"),index=False)
