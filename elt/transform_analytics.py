@@ -1,8 +1,15 @@
 import boto3
 import awswrangler as wr
+import os
+from utility import load_config
+
 glue = boto3.client('glue',region_name='us-east-1')
 session = boto3.Session(profile_name='datascientist')
 s3 = boto3.client('s3')
+
+
+# Load config file calling load_config function
+config_f = load_config("config.yaml")
 
 
 query = '''
@@ -35,3 +42,4 @@ tbl_guests_per_episode['guest_star'].fillna("no_guest_star", inplace=True)
 
 print(tbl_guests_per_episode)
 
+tbl_guests_per_episode.to_csv(os.path.join(config_f["data_directory"]+config_f["clean_data"],"simpsons_analytics.csv"),index=False)
