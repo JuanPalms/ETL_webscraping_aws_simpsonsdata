@@ -10,15 +10,15 @@ session = boto3.Session(profile_name='datascientist')
 s3 = boto3.client('s3')
 
 #Create a database
-response = glue.create_database(
-    DatabaseInput={
-        'Name': 'simpsons',
-        'Description': 'Simpsons season and episodes database.',
-    }
-)
+#response = glue.create_database(
+ #   DatabaseInput={
+  #      'Name': 'simpsons',
+   #     'Description': 'Simpsons season and episodes database.',
+    #}
+#)
 
 # create queries bucket
-s3.create_bucket(Bucket="itam-athena-queries-palmeros")
+#s3.create_bucket(Bucket="itam-athena-queries-palmeros")
 
 ## a) Extract y b) Load
 #Season Guests Table
@@ -35,7 +35,7 @@ query = '''
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'
     WITH SERDEPROPERTIES ('field.delim' = ',')
     STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
-    LOCATION 's3://itam-analytics-palms/simpsons/raw/guests/'
+    LOCATION 's3://itam-analytics-palms/simpsons/raw/seasons/'
     TBLPROPERTIES ('classification' = 'csv', "skip.header.line.count"="1");
 '''
 
@@ -59,7 +59,7 @@ query = '''
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'
     WITH SERDEPROPERTIES ('field.delim' = ',')
     STORED AS INPUTFORMAT 'org.apache.hadoop.mapred.TextInputFormat' OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
-    LOCATION 's3://itam-analytics-palms/simpsons/raw/seasons/'
+    LOCATION 's3://itam-analytics-palms/simpsons/raw/guests/'
     TBLPROPERTIES ('classification' = 'csv', "skip.header.line.count"="1");
 '''
 
