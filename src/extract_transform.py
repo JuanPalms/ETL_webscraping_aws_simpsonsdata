@@ -87,7 +87,7 @@ DICT_CLEAN_NAMES_EPISODES_TABLE = {
     'Directed by': 'directed_by',
     'Original air date': 'date_aired',
     'Prod. code': 'prod_code',
-    'U.S. viewers (millions)': 'household_or_viewers',    
+    'U.S. viewers (millions)': 'household_or_viewers'
 }
 
 # Adding season numbers and getting all together in a single table
@@ -105,7 +105,11 @@ episodes_totals_raw = (
         # Estandariza el formato de la fecha y los datos faltantes
         date_aired = lambda df_: pd.to_datetime(df_.date_aired),
         # Convierte la variable household or viewers en numérica
-        household_or_viewers= lambda df_: df_.household_or_viewers.str.replace(r'(.[n[0-9]*])', "", regex=True).replace('TBA', np.nan),
+        household_or_viewers= lambda df_: df_.household_or_viewers.str.replace(r'(^.[n[0-9]*$])', "", regex=True).replace('TBA', np.nan),
+        # Crea la variable viewers como numérica
+        viewer = lambda df_: df_.household_or_viewers.str.extract(r'([0-9]*\.[0-9]*)').astype('float'),
+        # Saca los metadatos de las unidades a una nueva variable
+        viewer_units = lambda df_: np.where(df_.household_or_viewers.str.contains('viewers'), "million viewers", "million households"),
         episode_title = lambda df_: df_.episode_title.str.replace('"', '')
     )
     # Elimina la variable prod code
