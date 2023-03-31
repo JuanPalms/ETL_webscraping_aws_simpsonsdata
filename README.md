@@ -4,20 +4,30 @@ This repository implements an ETL process using the data of the programs broadca
 
 ## Repository structure
 ```bash
-.
-├── config.yaml
+ETL_ELT_SIMPSONS_PROJECT
+├── analytics
+│   ├── EDA.ipynb  # Python notebook that displays the final analytics of the simpsons seasons.
+│   └── utility.py # Useful functions for analytics steps
+├── config.yaml # defines global parameters to be invoked along the project/
 ├── data
-│   └── raw # Stores scraped and wrangled data
-│       ├── simpsons_episode_guests.csv 
-│       └── simpsons_episodes_totals.csv
+│   ├── clean
+│   │   └── simpsons_analytics.csv # Web scrapped complete data to be stored in data warehouse
+│   └── raw
+│       ├── simpsons_episode_guests.csv # Web scrapped data for further processing
+│       └── simpsons_episodes_totals.csv # Web scrapped data for further processing
 ├── elt # Modules for Extract, Load, Transform steps
-├── environment.yml # Provides libraries for replating this project
-├── etl # Modules for Extract, Transform, Load steps
-│   ├── extract_transform.py #Web scrapping and data wrangling
-│   ├── load.py # Connection with S3 client and upload data to datalake
-│   └── utility.py # Useful functions for etl steps
+│   ├── extract_load.py # Datawarehouse creation in a S3 bucket
+│   ├── transform_analytics.py # SQL queries in order to extract usefull data for analytics
+│   └── utility.py
+├── environment.yml # Provides libraries for replicating this project
+├── etl #
+│   ├── extract_transform.py  # Web scrapping process with pandas parser
+│   ├── load.py  # Datalake creation in a S3 bucket
+│   └── utility.py
 ├── README.md
 └── requirements.txt
+
+
 
 ```
 ## Data
